@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Мой профиль{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Профиль пользователя</h2>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">{{ user.full_name }}</h5>
+            <p class="card-text">
+                <strong>Имя пользователя:</strong> {{ user.username }}<br>
+                <strong>Email:</strong> {{ user.email }}<br>
+                <strong>Согласие на обработку ПД:</strong> {% if user.agreement %}Да{% else %}Нет{% endif %}
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
