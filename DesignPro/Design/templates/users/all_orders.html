@@ -1,22 +1,30 @@
-{% extends 'base.html' %}
-
-{% block title %}Главная{% endblock %}
-
+<{% extends 'base.html' %}
+{% block title %}Список заказов{% endblock %}
 {% block content %}
-    <h1>Главная страница</h1>
-    <p>Добро пожаловать на сайт!</p>
+    <h1>Все заявки</h1>
 
-    <h1>Все выполненные заявки</h1>
-    {% if last_orders %}
+    <form method="get" class="mb-4">
         <div class="row">
-            {% for order in last_orders %}
+            <div class="col-md-4">
+                <label for="status">Фильтр по статусу:</label>
+                <select name="status" id="status" class="form-control" onchange="this.form.submit()">
+                    <option value="">Все статусы</option>
+                    {% for value, label in status_choices %}
+                        <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </form>
+
+{% if orders %}
+        <div class="row">
+            {% for order in orders %}
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card h-100 shadow-sm">
-                    {% if order.design_image %}
-                        <a href="{% url 'order_detail' order.id %}" class="d-block" style="text-decoration: none; color: inherit;">
-                            <img src="{{ order.design_image.url }}" class="card-img-top" alt="{{ order.name }}" style="object-fit: cover; height: 200px; cursor: pointer;">
-                        </a>
-                    {% elif order.image %}
+                    {% if order.image %}
                         <a href="{% url 'order_detail' order.id %}" class="d-block" style="text-decoration: none; color: inherit;">
                             <img src="{{ order.image.url }}" class="card-img-top" alt="{{ order.name }}" style="object-fit: cover; height: 200px; cursor: pointer;">
                         </a>
@@ -50,7 +58,7 @@
         </div>
     {% else %}
         <div class="alert alert-info">
-            Нет выполненных заявок.
+            Пока нет заявок.
         </div>
     {% endif %}
 {% endblock %}
