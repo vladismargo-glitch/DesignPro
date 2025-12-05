@@ -42,6 +42,7 @@
                             <strong>Создано:</strong> {{ order.timestamp|date:"d.m.Y H:i" }}
                         </p>
                         {% if order.status == 'new' %}
+                         <a href="{% url 'delete_order' order.id %}" class="btn btn-sm btn-outline-danger mt-2">Удалить</a>
                         {% endif %}
                     </div>
                 </div>

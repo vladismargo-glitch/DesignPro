@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Смена статуса заявки: {{ order.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Смена статуса заявки: {{ order.name }}</h2>
+
+    <!-- Вариант 1: Принять в работу -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h3 class="card-title">Вариант 1: Принять в работу</h3>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="comment" class="form-label">Комментарий:</label>
+                    <textarea name="comment" id="comment" class="form-control" rows="2" placeholder="Обязательный комментарий" required></textarea>
+                </div>
+                <input type="hidden" name="status" value="in_progress">
+                <button type="submit" class="btn btn-primary">Принять в работу</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Вариант 2: Выполнено -->
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Вариант 2: Отметить как выполненное</h3>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="design_image" class="form-label">Загрузите изображение дизайна:</label>
+                    <input type="file" name="design_image" id="design_image" class="form-control" accept="image/*" required>
+                </div>
+                <input type="hidden" name="status" value="completed">
+                <button type="submit" class="btn btn-success">Отметить как выполненное</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'my_orders' %}" class="btn btn-secondary">Назад к заявкам</a>
+    </div>
+</div>
+{% endblock %}

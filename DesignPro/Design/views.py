@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import CustomUserCreationForm, OrderForm
+from .forms import CustomUserCreationForm, OrderForm, CategoryForm
 from .models import Order, Category
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
@@ -177,4 +177,56 @@ def category_management_view(request):
         messages.error(request, "Доступ разрешён только администраторам.")
         return redirect('index')
 
+    categories = Category.objects.all()
 
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Категория успешно добавлена!")
+            return redirect('category_management')
+        else:
+            messages.error(request, "Ошибка при добавлении категории.")
+    else:
+        form = CategoryForm()
+
+    return render(request, 'users/category_management.html', {
+        'form': form,
+        'categories': categories,
+    })
+@login_required
+def delete_category(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+
+    if order.user != request.user:
+        messages.error(request, "Вы не можете удалить чужую заявку.")
+        return redirect('my_orders')
+
+    if order.status != Order.STATUS_NEW:
+        messages.error(request, "Нельзя удалить заявку, которая уже в работе или выполнена.")
+        return redirect('my_orders')
+
+    if request.method == 'POST':
+        order.delete()
+        messages.success(request, "Заявка успешно удалена!")
+        return redirect('my_orders')
+
+    return render(request, 'users/confirm_delete_order.html', {'order': order})
+@login_required
+def delete_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+
+    if order.user != request.user:
+        messages.error(request, "Вы не можете удалить чужую заявку.")
+        return redirect('my_orders')
+
+    if order.status != Order.STATUS_NEW:
+        messages.error(request, "Нельзя удалить заявку, которая уже в работе или выполнена.")
+        return redirect('my_orders')
+
+    if request.method == 'POST':
+        order.delete()
+        messages.success(request, "Заявка успешно удалена!")
+        return redirect('my_orders')
+
+    return render(request, 'users/confirm_delete_order.html', {'order': order})

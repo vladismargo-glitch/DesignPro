@@ -1,11 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from django.utils import timezone
 import os
 
 class User(AbstractUser):
-    full_name = models.CharField(max_length=100, verbose_name='ФИО')
+    username = models.CharField(max_length=40, validators=[RegexValidator(regex=r'^[a-zA-Z]+$')], unique=True)
+    full_name = models.CharField(max_length=100, validators=[RegexValidator(regex='^[а-яА-ЯёЁ\s\-]+$')], verbose_name='ФИО')
     agreement = models.BooleanField(default=False, verbose_name='Согласие на обработку персональных данных')
     email = models.EmailField(unique=True)
     def __str__(self):
