@@ -7,7 +7,9 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Мои заявки</h2>
-        <a href="{% url 'create_order' %}" class="btn btn-success">Новая заявка</a>
+        {% if not user.is_staff %}
+    <a href="{% url 'create_order' %}" class="btn btn-success">Создать заявку</a>
+{% endif %}
     </div>
 
     <form method="get" class="mb-4">

@@ -9,7 +9,14 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 def index(request):
-    return render(request, 'index.html')
+    num_status = Order.objects.filter(status=Order.STATUS_IN_PROGRESS).count()
+    last_orders = Order.objects.filter(status=Order.STATUS_COMPLETED).order_by('-timestamp')[:4]
+
+    return render(request, 'index.html', {
+        'num_status': num_status,
+        'last_orders': last_orders,
+    })
+
 
 def register_view(request):
     if request.method == 'POST':
@@ -64,6 +71,10 @@ def logout_view(request):
 
 @login_required
 def create_order_view(request):
+    if request.user.is_staff:
+        messages.error(request, "Администраторы не могут создавать заявки.")
+        return redirect('my_orders')  # или 'index', как тебе удобно
+
     if request.method == 'POST':
         form = OrderForm(request.POST, request.FILES)
         if form.is_valid():
