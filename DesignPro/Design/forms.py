@@ -3,6 +3,11 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import User, Order,Category
 
 class CustomUserCreationForm(UserCreationForm):
+    username = forms.CharField(
+        label='Логин',
+        max_length=40,
+        error_messages={'required': 'Это поле обязательно'}
+    )
     full_name = forms.CharField(label='ФИО', max_length=100)
     email = forms.EmailField(required=True)
     agreement = forms.BooleanField(required=True, label='Согласие на обработку персональных данных')

@@ -71,7 +71,7 @@ def logout_view(request):
 def create_order_view(request):
     if request.user.is_staff:
         messages.error(request, "Администраторы не могут создавать заявки.")
-        return redirect('my_orders')  # или 'index', как тебе удобно
+        return redirect('my_orders')
 
     if request.method == 'POST':
         form = OrderForm(request.POST, request.FILES)
